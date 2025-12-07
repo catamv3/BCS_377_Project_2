@@ -137,9 +137,4 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('profileInfo')) {
     loadProfile();
   }
-
-  const logoutBtn = document.getElementById('logoutBtn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', handleLogout);
-  }
 });

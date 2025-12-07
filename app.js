@@ -1,4 +1,4 @@
-// server.js
+// app.js
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
@@ -57,7 +57,4 @@ app.use((req, res) => {
   res.status(404).render('pages/not-found', { title: 'Page Not Found' });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
- });
+module.exports = app;
