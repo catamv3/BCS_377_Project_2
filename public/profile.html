@@ -1,0 +1,83 @@
+<!-- public/profile.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Q-Unit • Profile</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="node.png">
+</head>
+<body>
+  <header class="main-nav">
+    <div class="main-nav-brand">Node University of Tomfoolery</div>
+    <div class="main-nav-actions">
+      <div class="nav-pulse-control">
+        <label for="pulse-control" class="sr-only">Color pulse speed</label>
+        <input type="range" id="pulse-control" min="0" max="2" step="0.1" value="0.5">
+        <span id="pulse-readout">0.50×</span>
+      </div>
+      <div class="nav-auth-buttons">
+        <button onclick="location.href='/login'">Jump back in</button>
+        <button onclick="location.href='/signup'">Create free account</button>
+      </div>
+      <div class="nav-user-panel">
+        <div class="nav-user-meta">
+          <div class="nav-user-mark" id="navUserInitial"></div>
+          <div class="nav-user-info">
+            <div id="wayfinderUsername" class="nav-user-name">Guest</div>
+          </div>
+        </div>
+        <div class="nav-user-links">
+          <a href="/quiz">Play</a>
+          <a href="/profile">Profile</a>
+          <a href="/leaderboard">Leaderboard</a>
+        </div>
+        <button id="wayfinderLogout" class="ghost-button hidden">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="profile-container">
+    <!-- Hero Section -->
+    <div class="profile-hero">
+      <div class="profile-hero-content">
+        <div class="profile-avatar" id="profileAvatar">Q</div>
+        <div class="profile-info" id="profileInfo">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <button class="btn-primary" onclick="location.href='quiz.html'">Take Quiz</button>
+        <button class="btn-secondary" onclick="location.href='leaderboard.html'">Leaderboard</button>
+        <button class="btn-logout" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-label">Loading...</div>
+        <div class="stat-value">--</div>
+      </div>
+    </div>
+
+    <!-- Quiz History -->
+    <div class="profile-history">
+      <div class="profile-history-header">
+        <h2 class="profile-history-title">Quiz History</h2>
+        <div class="history-filter">Recent 20 games</div>
+      </div>
+      <div id="historyContainer">
+        <div class="history-empty">
+          <div class="empty-icon"></div>
+          <div class="empty-text">Loading history...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

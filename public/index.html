@@ -1,0 +1,118 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Q-Unit • Welcome</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="node.png">
+</head>
+<body>
+  <header class="main-nav">
+    <div class="main-nav-brand">Node University of Tomfoolery</div>
+    <div class="main-nav-actions">
+      <div class="nav-pulse-control">
+        <label for="pulse-control" class="sr-only">Color pulse speed</label>
+        <input type="range" id="pulse-control" min="0" max="2" step="0.1" value="0.5">
+        <span id="pulse-readout">0.50×</span>
+      </div>
+      <div class="nav-auth-buttons">
+        <button onclick="location.href='/login'">Jump back in</button>
+        <button onclick="location.href='/signup'">Create free account</button>
+      </div>
+    </div>
+  </header>
+  <div class="landing-container">
+    <div class="landing-hero">
+      <!-- Central Crest - The Focal Point -->
+      <div class="crest-focal-point">
+        <div class="circular-text" aria-hidden="true">
+          <svg viewBox="0 0 200 200" class="circular-text-svg" role="presentation">
+            <defs>
+              <path id="circlePathTop" d="M 15,100 A 85,85 0 0,1 185,100"></path>
+              <path id="circlePathBottom" d="M 15,100 A 85,85 0 0,0 185,100"></path>
+            </defs>
+            <text class="circular-text-top">
+              <textPath href="#circlePathTop" startOffset="50%" text-anchor="middle">
+                IN THE SOUTH LIES THE NORTH NODE
+              </textPath>
+            </text>
+            <text class="circular-text-bottom">
+              <textPath href="#circlePathBottom" startOffset="50%" text-anchor="middle" side="right">
+                IN THE NORTH LIES THE SOUTH NODE
+              </textPath>
+            </text>
+          </svg>
+        </div>
+
+        <div class="crest-image" aria-label="Node crest" role="img"></div>
+      </div>
+
+      <!-- Consolidated Info Panel - Right Side -->
+      <div class="info-panel-container">
+        <div class="orbit-card info-panel-card">
+          <div class="info-panel-header">
+            <h1>Built for lunatics, heretics &amp; the gloriously sassy</h1>
+            <p>A fever-dream app that sharpens delirium one trivia burst at a time.</p>
+          </div>
+
+          <div class="info-panel-stats">
+            <div class="stat-item">
+              <span class="stat-value">547</span>
+              <span class="stat-label">Questions</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">10</span>
+              <span class="stat-label">Quiz Length</span>
+            </div>
+          </div>
+
+          <div class="info-panel-features">
+            <div class="feature-item">📊 Glory measured in real-time</div>
+            <div class="feature-item">👤 Your chaos, quantified beautifully</div>
+            <div class="feature-item">✨ Dangerously aesthetic</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const logo = document.querySelector('.crest-image');
+    const pulseControlWrapper = document.querySelector('.nav-pulse-control');
+    const pulseControl = document.getElementById('pulse-control');
+    const pulseReadout = document.getElementById('pulse-readout');
+
+    const updatePulseScale = (value) => {
+      const speed = Number(value);
+      const safeSpeed = speed <= 0 ? 0.0001 : speed;
+      document.documentElement.style.setProperty('--pulse-speed', speed);
+      document.documentElement.style.setProperty('--pulse-speed-safe', safeSpeed);
+
+      if (pulseReadout) {
+        pulseReadout.textContent = `${speed.toFixed(2)}×`;
+      }
+    };
+
+    if (logo) {
+      logo.addEventListener('click', function() {
+        this.classList.add('coin-flip');
+        // Show the nav bar color pulse slider
+        if (pulseControlWrapper && !pulseControlWrapper.classList.contains('is-visible')) {
+          pulseControlWrapper.classList.add('is-visible');
+        }
+        setTimeout(() => {
+          this.classList.remove('coin-flip');
+        }, 800);
+      });
+    }
+
+    if (pulseControl) {
+      updatePulseScale(pulseControl.value);
+      pulseControl.addEventListener('input', (event) => {
+        updatePulseScale(event.target.value);
+      });
+    }
+
+  </script>
+</body>
+</html>
