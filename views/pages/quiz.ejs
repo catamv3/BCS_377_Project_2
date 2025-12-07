@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head', { title }) %>
+<body>
+  <%- include('../partials/nav') %>
+
+  <main>
+    <div class="card">
+      <div class="card-header">
+        <h1 class="card-title">Quiz in progress</h1>
+        <p class="card-subtitle">
+          Answer all 10 questions. You can only submit once.
+        </p>
+      </div>
+
+      <div id="quizContainer"></div>
+
+      <div class="quiz-footer">
+        <div class="quiz-timer" id="quizTimer">Time remaining: --:--</div>
+        <div>
+          <button id="submitQuiz">Submit Quiz</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/quiz.js"></script>
+</body>
+</html>

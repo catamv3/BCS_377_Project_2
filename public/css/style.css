@@ -31,12 +31,13 @@ body {
     linear-gradient(135deg, rgba(22, 64, 181, 0.4), rgba(91, 32, 191, 0.35), rgba(171, 72, 223, 0.3));
   background-size: 250% 250%, 300% 300%, 350% 350%, 100% 100%;
   background-position: 50% 50%;
+  background-attachment: fixed;
   color: var(--text);
   min-height: 100vh;
-  height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
   animation: colorPulse calc(12s / var(--pulse-speed-safe)) ease-in-out infinite;
   animation-play-state: running;

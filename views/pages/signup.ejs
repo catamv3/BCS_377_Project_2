@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head', { title }) %>
+<body>
+  <%- include('../partials/nav') %>
+  <main>
+    <div class="card card-narrow">
+      <div class="card-header">
+        <h1 class="card-title">Create your account</h1>
+        <p class="card-subtitle">
+          Sign up to save your scores and view your quiz history.
+        </p>
+      </div>
+
+      <form id="signupForm" class="form">
+        <div class="form-row">
+          <label class="form-label" for="username">Username</label>
+          <input id="username" name="username" required>
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="email">Email</label>
+          <input id="email" name="email" type="email" required>
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="password">Password</label>
+          <input id="password" name="password" type="password" required minlength="4">
+        </div>
+        <div class="form-actions">
+          <button type="button" onclick="location.href='/login'">I have an account</button>
+          <button type="submit">Sign Up</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/auth.js"></script>
+</body>
+</html>

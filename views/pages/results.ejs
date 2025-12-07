@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head', { title }) %>
+<body>
+  <%- include('../partials/nav') %>
+
+  <main>
+    <div class="card card-medium">
+      <div class="card-header text-center">
+        <h1 class="card-title">Your Results</h1>
+        <p class="card-subtitle">
+          Here’s how you did on your latest quiz.
+        </p>
+      </div>
+
+      <div class="text-center">
+        <div class="results-score" id="resultsScore">-- / --</div>
+        <p class="results-subtext" id="resultsDetail"></p>
+      </div>
+
+      <div class="form-actions form-actions-center">
+        <button onclick="location.href='/quiz'">Play Again</button>
+        <button onclick="location.href='/profile'">View Profile</button>
+        <button onclick="location.href='/leaderboard'">Leaderboard</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/results.js"></script>
+</body>
+</html>

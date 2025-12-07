@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head', { title }) %>
+<body>
+  <%- include('../partials/nav') %>
+
+  <div class="profile-container">
+    <div class="profile-hero">
+      <div class="profile-hero-content">
+        <div class="profile-avatar" id="profileAvatar">Q</div>
+        <div class="profile-info" id="profileInfo"></div>
+      </div>
+
+      <div class="profile-actions">
+        <button class="btn-primary" onclick="location.href='/quiz'">Take Quiz</button>
+        <button class="btn-secondary" onclick="location.href='/leaderboard'">Leaderboard</button>
+        <button class="btn-logout" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-label">Loading...</div>
+        <div class="stat-value">--</div>
+      </div>
+    </div>
+
+    <div class="profile-history">
+      <div class="profile-history-header">
+        <h2 class="profile-history-title">Quiz History</h2>
+        <div class="history-filter">Recent 20 games</div>
+      </div>
+      <div id="historyContainer">
+        <div class="history-empty">
+          <div class="empty-icon"></div>
+          <div class="empty-text">Loading history...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/profile.js"></script>
+</body>
+</html>
