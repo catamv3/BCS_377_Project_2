@@ -1,6 +1,7 @@
 // public/js/quiz.js
 
 let questions = [];
+let quizId = null;
 let quizStartTime = null;
 let quizTimerInterval = null;
 const QUIZ_TIME_LIMIT_SECONDS = 60; // whole quiz timer (optional extra)
@@ -28,7 +29,15 @@ async function loadQuiz() {
   container.innerHTML = '<p>Loading quiz...</p>';
 
   try {
-    const res = await fetch('/api/quiz/new', { method: 'POST' });
+    const res = await fetch('/api/quiz/new', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: 10,
+        category: null,
+        difficulty: null
+      })
+    });
 
     if (res.status === 401) {
       alert('You must be logged in to play.');
@@ -41,7 +50,9 @@ async function loadQuiz() {
       return;
     }
 
-    questions = await res.json();
+    const data = await res.json();
+    quizId = data.quizId;
+    questions = data.questions;
     renderQuiz();
 
     // Start timer
@@ -95,7 +106,7 @@ async function submitQuiz() {
     const res = await fetch('/api/quiz/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ answers })
+      body: JSON.stringify({ quizId, answers })
     });
 
     const data = await res.json();

@@ -4,9 +4,13 @@ const router = express.Router();
 const requireAuth = require('../middleware/auth');
 const User = require('../models/User');
 const GameSession = require('../models/GameSession');
+const { fetchTriviaQuestions } = require('../services/triviaApi');
 
-// Load local questions
-const questions = require('../data/questions.json');
+// Load local questions as fallback
+const localQuestions = require('../data/questions.json');
+
+// Store questions in session to validate answers later
+const activeQuizzes = new Map();
 
 // Helper: shuffle array
 function shuffle(arr) {
@@ -16,56 +20,74 @@ function shuffle(arr) {
   }
 }
 
-// pick 10 question indexes, avoiding recent ones
-function getQuestionIndexesForUser(user, count = 10) {
-  const total = questions.length;
-  const recentSet = new Set(user.recentQuestionIndexes || []);
-  const fresh = [];
+// Fallback: pick 10 question indexes from local questions
+function getLocalQuestions(count = 10) {
+  const indexes = [...Array(localQuestions.length).keys()];
+  shuffle(indexes);
+  const chosen = indexes.slice(0, count);
 
-  for (let i = 0; i < total; i++) {
-    if (!recentSet.has(i)) fresh.push(i);
-  }
-
-  shuffle(fresh);
-
-  let chosen = fresh.slice(0, count);
-
-  if (chosen.length < count) {
-    const all = [...Array(total).keys()];
-    shuffle(all);
-    const needed = count - chosen.length;
-    const fill = all.filter(i => !chosen.includes(i)).slice(0, needed);
-    chosen = chosen.concat(fill);
-  }
-
-  user.recentQuestionIndexes = [...chosen, ...(user.recentQuestionIndexes || [])].slice(0, 30);
-
-  return chosen;
+  return chosen.map(i => {
+    const q = localQuestions[i];
+    return {
+      id: i,
+      question: q.question,
+      A: q.A,
+      B: q.B,
+      C: q.C,
+      D: q.D,
+      answer: q.answer
+    };
+  });
 }
 
 // POST /api/quiz/new
 router.post('/new', requireAuth, async (req, res) => {
   try {
+    const { amount = 10, category, difficulty } = req.body;
     const user = await User.findById(req.session.userId);
-    const indexes = getQuestionIndexesForUser(user, 10);
+
+    let questions;
+
+    try {
+      // Try to fetch questions from Trivia API
+      questions = await fetchTriviaQuestions(amount, category, difficulty);
+      console.log(`Fetched ${questions.length} questions from Trivia API`);
+    } catch (apiError) {
+      console.error('Trivia API failed, using local questions:', apiError.message);
+      // Fallback to local questions
+      questions = getLocalQuestions(amount);
+    }
+
+    // Store questions in session for answer validation
+    const quizId = `${user._id}_${Date.now()}`;
+    activeQuizzes.set(quizId, questions);
+
+    // Clean up old quizzes (older than 1 hour)
+    const oneHourAgo = Date.now() - 3600000;
+    for (const [key, value] of activeQuizzes.entries()) {
+      const timestamp = parseInt(key.split('_')[1]);
+      if (timestamp < oneHourAgo) {
+        activeQuizzes.delete(key);
+      }
+    }
 
     await user.save();
 
-    const payload = indexes.map(i => {
-      const q = questions[i];
-      return {
-        id: i,
-        question: q.question,
-        options: {
-          A: q.A,
-          B: q.B,
-          C: q.C,
-          D: q.D
-        }
-      };
-    });
+    // Send questions to client (without answers)
+    const payload = questions.map((q, index) => ({
+      id: index,
+      question: q.question,
+      options: {
+        A: q.A,
+        B: q.B,
+        C: q.C,
+        D: q.D
+      },
+      category: q.category,
+      difficulty: q.difficulty
+    }));
 
-    res.json(payload);
+    res.json({ quizId, questions: payload });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Error generating quiz' });
@@ -75,8 +97,15 @@ router.post('/new', requireAuth, async (req, res) => {
 // POST /api/quiz/submit
 router.post('/submit', requireAuth, async (req, res) => {
   try {
-    const { answers } = req.body;
+    const { quizId, answers } = req.body;
     // answers: [{ id, chosenAnswer }, ...]
+
+    // Retrieve the stored questions for this quiz
+    const questions = activeQuizzes.get(quizId);
+
+    if (!questions) {
+      return res.status(400).json({ message: 'Quiz not found or expired' });
+    }
 
     let score = 0;
     const detail = answers.map(ans => {
@@ -92,6 +121,9 @@ router.post('/submit', requireAuth, async (req, res) => {
         isCorrect
       };
     });
+
+    // Clean up the quiz from memory
+    activeQuizzes.delete(quizId);
 
     const game = await GameSession.create({
       user: req.session.userId,
