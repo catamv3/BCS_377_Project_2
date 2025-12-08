@@ -1,23 +1,16 @@
 // routes/userRoutes.js
+// This file defines the user-related routes
+// Business logic is in controllers/userController.js
+
 const express = require('express');
 const router = express.Router();
-const requireAuth = require('../middleware/auth');
-const User = require('../models/User');
-const GameSession = require('../models/GameSession');
+const { requireAuth } = require('../middleware/auth');
+const userController = require('../controllers/userController');
 
-// GET /api/user/me
-router.get('/me', requireAuth, async (req, res) => {
-  const user = await User.findById(req.session.userId).select('username email createdAt');
-  res.json(user);
-});
+// GET /api/user/me - Get current user profile (protected route)
+router.get('/me', requireAuth, userController.getCurrentUser);
 
-// GET /api/user/me/history
-router.get('/me/history', requireAuth, async (req, res) => {
-  const games = await GameSession.find({ user: req.session.userId })
-    .sort({ createdAt: -1 })
-    .limit(20);
-
-  res.json(games);
-});
+// GET /api/user/me/history - Get user's quiz history (protected route)
+router.get('/me/history', requireAuth, userController.getUserHistory);
 
 module.exports = router;

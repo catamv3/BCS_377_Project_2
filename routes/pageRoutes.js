@@ -1,16 +1,13 @@
 // routes/pageRoutes.js
+// This file defines routes that render HTML pages (views)
+
 const express = require('express');
 const router = express.Router();
+const { ensureLoggedIn } = require('../middleware/auth');
 
-function ensureLoggedIn(req, res, next) {
-  if (!req.session || !req.session.userId) {
-    return res.redirect('/login');
-  }
-  next();
-}
-
+// Public pages (no login required)
 router.get('/', (req, res) => {
-  res.render('pages/home', { title: 'Welcome' });
+  res.render('pages/home', { title: 'Welcome to Q-Unit' });
 });
 
 router.get('/login', (req, res) => {
@@ -21,6 +18,7 @@ router.get('/signup', (req, res) => {
   res.render('pages/signup', { title: 'Sign Up' });
 });
 
+// Protected pages (login required)
 router.get('/quiz', ensureLoggedIn, (req, res) => {
   res.render('pages/quiz', { title: 'Quiz Time' });
 });
