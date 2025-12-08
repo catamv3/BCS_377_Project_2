@@ -1,10 +1,6 @@
 // middleware/auth.js
-// Authentication middleware for protecting routes
 
-/**
- * Middleware for API routes
- * Returns JSON response if user is not authenticated
- */
+// Check if user is logged in (for API routes)
 function requireAuth(req, res, next) {
   if (!req.session || !req.session.userId) {
     return res.status(401).json({ message: 'Not logged in' });
@@ -12,10 +8,7 @@ function requireAuth(req, res, next) {
   next();
 }
 
-/**
- * Middleware for page routes
- * Redirects to login page if user is not authenticated
- */
+// Check if user is logged in (for page routes)
 function ensureLoggedIn(req, res, next) {
   if (!req.session || !req.session.userId) {
     return res.redirect('/login');
@@ -23,7 +16,4 @@ function ensureLoggedIn(req, res, next) {
   next();
 }
 
-module.exports = {
-  requireAuth,      // Use for API endpoints
-  ensureLoggedIn    // Use for rendered pages
-};
+module.exports = { requireAuth, ensureLoggedIn };
