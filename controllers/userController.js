@@ -1,13 +1,8 @@
 // controllers/userController.js
-// This file contains all user-related business logic
-
 const User = require('../models/User');
 const GameSession = require('../models/GameSession');
 
-/**
- * Get current user's profile
- * GET /api/user/me
- */
+// Get current user
 exports.getCurrentUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.session.userId)
@@ -23,15 +18,12 @@ exports.getCurrentUser = async (req, res, next) => {
   }
 };
 
-/**
- * Get current user's quiz history
- * GET /api/user/me/history
- */
+// Get user's quiz history
 exports.getUserHistory = async (req, res, next) => {
   try {
     const games = await GameSession.find({ user: req.session.userId })
-      .sort({ createdAt: -1 })  // Most recent first
-      .limit(20);  // Last 20 games
+      .sort({ createdAt: -1 })
+      .limit(20);
 
     res.json(games);
   } catch (err) {
