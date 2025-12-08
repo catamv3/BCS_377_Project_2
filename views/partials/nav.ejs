@@ -1,7 +1,6 @@
 <header class="main-nav">
   <div class="main-nav-brand">Node University of Tomfoolery</div>
 
-  <% if (typeof hideNavButtons === 'undefined' || !hideNavButtons) { %>
   <div class="main-nav-actions">
     <div class="nav-pulse-control">
       <label for="pulse-control" class="sr-only">Color pulse speed</label>
@@ -18,14 +17,19 @@
 
     <% if (isAuthenticated) { %>
       <div class="nav-user-panel">
+        <div class="nav-user-meta">
+          <div class="nav-user-mark" id="navUserInitial"></div>
+          <div class="nav-user-info">
+            <div id="wayfinderUsername" class="nav-user-name">Guest</div>
+          </div>
+        </div>
         <div class="nav-user-links">
           <a href="/quiz">Play</a>
           <a href="/profile">Profile</a>
           <a href="/leaderboard">Leaderboard</a>
-          <a href="#" id="wayfinderLogout">Logout</a>
         </div>
+        <button id="wayfinderLogout" class="ghost-button hidden">Logout</button>
       </div>
     <% } %>
   </div>
-  <% } %>
 </header>
