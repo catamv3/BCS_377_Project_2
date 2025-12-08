@@ -28,7 +28,6 @@ async function loadProfile() {
     ]);
 
     if (meRes.status === 401 || historyRes.status === 401) {
-      alert('You must be logged in to view your profile.');
       window.location.href = '/login';
       return;
     }
@@ -129,7 +128,7 @@ async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' });
     window.location.href = '/';
   } catch (err) {
-    alert('Error logging out');
+    console.error('Error logging out:', err);
   }
 }
 
