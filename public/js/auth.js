@@ -21,13 +21,12 @@ async function handleSignup(e) {
 
     const data = await res.json();
     if (res.ok) {
-      alert('Account created successfully! Please log in with your credentials.');
       window.location.href = '/login';
     } else {
-      alert(data.message || 'Signup failed');
+      console.error('Signup failed:', data.message);
     }
   } catch (err) {
-    alert('Network error during signup');
+    console.error('Network error during signup:', err);
   } finally {
     btn.disabled = false;
   }
@@ -53,13 +52,12 @@ async function handleLogin(e) {
 
     const data = await res.json();
     if (res.ok) {
-      alert('Welcome back, ' + data.username + '!');
       window.location.href = '/profile';
     } else {
-      alert(data.message || 'Login failed');
+      console.error('Login failed:', data.message);
     }
   } catch (err) {
-    alert('Network error during login');
+    console.error('Network error during login:', err);
   } finally {
     btn.disabled = false;
   }

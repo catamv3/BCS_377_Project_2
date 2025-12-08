@@ -19,7 +19,6 @@ function updateTimer() {
 
   if (remaining <= 0) {
     clearInterval(quizTimerInterval);
-    alert('Time is up! Submitting your quiz.');
     submitQuiz();
   }
 }
@@ -40,7 +39,6 @@ async function loadQuiz() {
     });
 
     if (res.status === 401) {
-      alert('You must be logged in to play.');
       window.location.href = '/login';
       return;
     }
@@ -119,14 +117,13 @@ async function submitQuiz() {
       });
       window.location.href = `/results?${params.toString()}`;
     } else if (res.status === 401) {
-      alert('You must be logged in.');
       window.location.href = '/login';
     } else {
-      alert(data.message || 'Error submitting quiz');
+      console.error('Error submitting quiz:', data.message);
       submitBtn.disabled = false;
     }
   } catch (err) {
-    alert('Network error submitting quiz');
+    console.error('Network error submitting quiz:', err);
     submitBtn.disabled = false;
   }
 }

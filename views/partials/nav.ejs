@@ -1,6 +1,7 @@
 <header class="main-nav">
   <div class="main-nav-brand">Node University of Tomfoolery</div>
 
+  <% if (typeof hideNavButtons === 'undefined' || !hideNavButtons) { %>
   <div class="main-nav-actions">
     <div class="nav-pulse-control">
       <label for="pulse-control" class="sr-only">Color pulse speed</label>
@@ -26,4 +27,5 @@
       </div>
     <% } %>
   </div>
+  <% } %>
 </header>
