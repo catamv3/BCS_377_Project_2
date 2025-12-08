@@ -6,6 +6,56 @@ function getQueryParam(name) {
   return params.get(name);
 }
 
+const DEVICE_CLASS_PREFIX = 'device-';
+const DEVICE_TYPES = ['phone', 'tablet', 'desktop'];
+let activeDeviceType = null;
+
+function detectDeviceType() {
+  const ua = navigator.userAgent.toLowerCase();
+  const isIPad = /ipad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isIPhone = /iphone|ipod/.test(ua) && !isIPad;
+  const isAndroid = /android/.test(ua);
+  const isAndroidTablet = isAndroid && !/mobile/.test(ua);
+  const viewport = Math.min(window.innerWidth, window.innerHeight);
+
+  if (isIPad || isAndroidTablet || (viewport >= 600 && viewport <= 1024 && navigator.maxTouchPoints > 1)) {
+    return 'tablet';
+  }
+
+  if (isIPhone || (isAndroid && !isAndroidTablet) || viewport < 600) {
+    return 'phone';
+  }
+
+  if (viewport <= 1024) {
+    return 'tablet';
+  }
+
+  return 'desktop';
+}
+
+function applyDeviceTypeClass() {
+  if (!document.body) return;
+  const type = detectDeviceType();
+  if (type === activeDeviceType) return;
+
+  DEVICE_TYPES.forEach(t => document.body.classList.remove(`${DEVICE_CLASS_PREFIX}${t}`));
+  document.body.classList.add(`${DEVICE_CLASS_PREFIX}${type}`);
+  document.body.dataset.deviceType = type;
+  activeDeviceType = type;
+}
+
+function initDeviceWatcher() {
+  applyDeviceTypeClass();
+  let resizeTimeout;
+  const scheduleUpdate = () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(applyDeviceTypeClass, 120);
+  };
+
+  window.addEventListener('resize', scheduleUpdate);
+  window.addEventListener('orientationchange', scheduleUpdate);
+}
+
 // Initialize nav user state (called on each page)
 async function initWayfinder() {
   const logoutBtn = document.getElementById('wayfinderLogout');
@@ -50,6 +100,7 @@ function markActiveWayfinderLink() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initDeviceWatcher();
   initWayfinder();
   markActiveWayfinderLink();
 });
